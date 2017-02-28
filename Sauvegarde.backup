@@ -1,0 +1,364 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 9.4.5
+-- Dumped by pg_dump version 9.4.5
+-- Started on 2017-02-28 15:02:16
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'SQL_ASCII';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+
+--
+-- TOC entry 2038 (class 1262 OID 16393)
+-- Name: MobileBanking; Type: DATABASE; Schema: -; Owner: postgres
+--
+
+CREATE DATABASE "MobileBanking" WITH TEMPLATE = template0 ENCODING = 'UTF8' LC_COLLATE = 'English_United States.1252' LC_CTYPE = 'English_United States.1252';
+
+
+ALTER DATABASE "MobileBanking" OWNER TO postgres;
+
+\connect "MobileBanking"
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'SQL_ASCII';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+
+--
+-- TOC entry 177 (class 3079 OID 11855)
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- TOC entry 2041 (class 0 OID 0)
+-- Dependencies: 177
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+SET search_path = public, pg_catalog;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- TOC entry 172 (class 1259 OID 16394)
+-- Name: client; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE client (
+    idclient bigint NOT NULL,
+    nom character varying(50) NOT NULL,
+    prenom character varying(50) NOT NULL,
+    datenaissance date NOT NULL,
+    sexe character varying(1) NOT NULL,
+    matricule character varying(15) NOT NULL,
+    cin character varying(12) NOT NULL,
+    motdepasse character varying(20) NOT NULL,
+    existe boolean NOT NULL,
+    dateinscription date NOT NULL,
+    dateinsertion date NOT NULL
+);
+
+
+ALTER TABLE client OWNER TO postgres;
+
+--
+-- TOC entry 173 (class 1259 OID 16400)
+-- Name: compte; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE compte (
+    idcompte bigint NOT NULL,
+    idclient bigint NOT NULL,
+    idtypecompte integer NOT NULL,
+    numcompte character varying(15) NOT NULL,
+    motdepasse character varying(20) NOT NULL,
+    solde numeric NOT NULL,
+    existe boolean NOT NULL,
+    datecreation date NOT NULL,
+    dateinsertion date NOT NULL
+);
+
+
+ALTER TABLE compte OWNER TO postgres;
+
+--
+-- TOC entry 174 (class 1259 OID 16411)
+-- Name: mvtcompte; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE mvtcompte (
+    idmvtcompte bigint NOT NULL,
+    idcompte bigint NOT NULL,
+    idtypemvt integer NOT NULL,
+    montant numeric NOT NULL,
+    datemvt date NOT NULL,
+    dateinsertion date NOT NULL
+);
+
+
+ALTER TABLE mvtcompte OWNER TO postgres;
+
+--
+-- TOC entry 175 (class 1259 OID 16422)
+-- Name: typecompte; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE typecompte (
+    idtypecompte integer NOT NULL,
+    designation character varying(50) NOT NULL,
+    description character varying(250) NOT NULL,
+    datecreation date NOT NULL,
+    dateinsertion date NOT NULL
+);
+
+
+ALTER TABLE typecompte OWNER TO postgres;
+
+--
+-- TOC entry 176 (class 1259 OID 16428)
+-- Name: typemvt; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE typemvt (
+    idtypemvt integer NOT NULL,
+    designation character varying(50) NOT NULL,
+    description character varying(250) NOT NULL,
+    datecreation date NOT NULL,
+    dateinsertion date NOT NULL
+);
+
+
+ALTER TABLE typemvt OWNER TO postgres;
+
+--
+-- TOC entry 2029 (class 0 OID 16394)
+-- Dependencies: 172
+-- Data for Name: client; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 2030 (class 0 OID 16400)
+-- Dependencies: 173
+-- Data for Name: compte; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 2031 (class 0 OID 16411)
+-- Dependencies: 174
+-- Data for Name: mvtcompte; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 2032 (class 0 OID 16422)
+-- Dependencies: 175
+-- Data for Name: typecompte; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO typecompte (idtypecompte, designation, description, datecreation, dateinsertion) VALUES (1, 'depot', 'compte de depot', '2017-02-28', '2017-02-28');
+
+
+--
+-- TOC entry 2033 (class 0 OID 16428)
+-- Dependencies: 176
+-- Data for Name: typemvt; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO typemvt (idtypemvt, designation, description, datecreation, dateinsertion) VALUES (1, 'depot', 'depot d''argent', '2017-02-28', '2017-02-28');
+INSERT INTO typemvt (idtypemvt, designation, description, datecreation, dateinsertion) VALUES (2, 'retrait', 'retrait d''argent', '2017-02-28', '2017-02-28');
+INSERT INTO typemvt (idtypemvt, designation, description, datecreation, dateinsertion) VALUES (3, 'transfert (envoyeur)', 'transfert d''argent dont le compte est envoyeur', '2017-02-28', '2017-02-28');
+INSERT INTO typemvt (idtypemvt, designation, description, datecreation, dateinsertion) VALUES (4, 'transfert (expediteur)', 'transfert d''argent dont le compte est l''expediteur', '2017-02-28', '2017-02-28');
+
+
+--
+-- TOC entry 1899 (class 2606 OID 16398)
+-- Name: pk_client; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY client
+    ADD CONSTRAINT pk_client PRIMARY KEY (idclient);
+
+
+--
+-- TOC entry 1903 (class 2606 OID 16407)
+-- Name: pk_compte; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY compte
+    ADD CONSTRAINT pk_compte PRIMARY KEY (idcompte);
+
+
+--
+-- TOC entry 1908 (class 2606 OID 16418)
+-- Name: pk_mvtcompte; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY mvtcompte
+    ADD CONSTRAINT pk_mvtcompte PRIMARY KEY (idmvtcompte);
+
+
+--
+-- TOC entry 1911 (class 2606 OID 16426)
+-- Name: pk_typecompte; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY typecompte
+    ADD CONSTRAINT pk_typecompte PRIMARY KEY (idtypecompte);
+
+
+--
+-- TOC entry 1914 (class 2606 OID 16432)
+-- Name: pk_typemvt; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY typemvt
+    ADD CONSTRAINT pk_typemvt PRIMARY KEY (idtypemvt);
+
+
+--
+-- TOC entry 1897 (class 1259 OID 16399)
+-- Name: client_pk; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE UNIQUE INDEX client_pk ON client USING btree (idclient);
+
+
+--
+-- TOC entry 1900 (class 1259 OID 16409)
+-- Name: compte_client_fk; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX compte_client_fk ON compte USING btree (idclient);
+
+
+--
+-- TOC entry 1901 (class 1259 OID 16408)
+-- Name: compte_pk; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE UNIQUE INDEX compte_pk ON compte USING btree (idcompte);
+
+
+--
+-- TOC entry 1905 (class 1259 OID 16420)
+-- Name: mvt_compte_fk; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX mvt_compte_fk ON mvtcompte USING btree (idcompte);
+
+
+--
+-- TOC entry 1906 (class 1259 OID 16419)
+-- Name: mvtcompte_pk; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE UNIQUE INDEX mvtcompte_pk ON mvtcompte USING btree (idmvtcompte);
+
+
+--
+-- TOC entry 1904 (class 1259 OID 16410)
+-- Name: type_compte_fk; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX type_compte_fk ON compte USING btree (idtypecompte);
+
+
+--
+-- TOC entry 1909 (class 1259 OID 16421)
+-- Name: type_mvt_fk; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX type_mvt_fk ON mvtcompte USING btree (idtypemvt);
+
+
+--
+-- TOC entry 1912 (class 1259 OID 16427)
+-- Name: typecompte_pk; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE UNIQUE INDEX typecompte_pk ON typecompte USING btree (idtypecompte);
+
+
+--
+-- TOC entry 1915 (class 1259 OID 16433)
+-- Name: typemvt_pk; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE UNIQUE INDEX typemvt_pk ON typemvt USING btree (idtypemvt);
+
+
+--
+-- TOC entry 1916 (class 2606 OID 16434)
+-- Name: fk_compte_compte_cl_client; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY compte
+    ADD CONSTRAINT fk_compte_compte_cl_client FOREIGN KEY (idclient) REFERENCES client(idclient) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 1917 (class 2606 OID 16439)
+-- Name: fk_compte_type_comp_typecomp; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY compte
+    ADD CONSTRAINT fk_compte_type_comp_typecomp FOREIGN KEY (idtypecompte) REFERENCES typecompte(idtypecompte) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 1918 (class 2606 OID 16444)
+-- Name: fk_mvtcompt_mvt_compt_compte; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY mvtcompte
+    ADD CONSTRAINT fk_mvtcompt_mvt_compt_compte FOREIGN KEY (idcompte) REFERENCES compte(idcompte) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 1919 (class 2606 OID 16449)
+-- Name: fk_mvtcompt_type_mvt_typemvt; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY mvtcompte
+    ADD CONSTRAINT fk_mvtcompt_type_mvt_typemvt FOREIGN KEY (idtypemvt) REFERENCES typemvt(idtypemvt) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 2040 (class 0 OID 0)
+-- Dependencies: 5
+-- Name: public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+-- Completed on 2017-02-28 15:02:16
+
+--
+-- PostgreSQL database dump complete
+--
+
